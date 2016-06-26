@@ -11,81 +11,81 @@ Espeak::Espeak(const string dataPath)
 	espeak_ng_InitializePath(dataPath.c_str());
 	espeak_ng_ERROR_CONTEXT context = nullptr;
 	espeak_ng_STATUS result = espeak_ng_Initialize(&context);
-	handlePossibleError(result, &context);
+	HandlePossibleError(result, &context);
 	result = espeak_ng_InitializeOutput(PLAYBACK_MODE, 0, nullptr);
-	handlePossibleError(result);
+	HandlePossibleError(result);
 }
 
-unsigned int Espeak::getPitch()
+unsigned int Espeak::GetPitch()
 {
 	return espeak_GetParameter(espeakPITCH, 1);
 }
 
-void Espeak::setPitch(unsigned int pitch)
+void Espeak::SetPitch(unsigned int pitch)
 {
 	espeak_ng_STATUS result = espeak_ng_SetParameter(espeakPITCH, pitch, 0);
-	handlePossibleError(result);
+	HandlePossibleError(result);
 }
 
-unsigned int Espeak::getSpeed()
+unsigned int Espeak::GetSpeed()
 {
 	return espeak_GetParameter(espeakRATE, 1);
 }
 
-void Espeak::setSpeed(unsigned int speed)
+void Espeak::SetSpeed(unsigned int speed)
 {
 	espeak_ng_STATUS result = espeak_ng_SetParameter(espeakRATE, speed, 0);
-	handlePossibleError(result);
+	HandlePossibleError(result);
 }
 
-unsigned int Espeak::getVolume()
+unsigned int Espeak::GetVolume()
 {
 	return espeak_GetParameter(espeakVOLUME, 1);
 }
 
-void Espeak::setVolume(unsigned int volume)
+void Espeak::SetVolume(unsigned int volume)
 {
 	espeak_ng_STATUS result = espeak_ng_SetParameter(espeakVOLUME, volume, 0);
-	handlePossibleError(result);
+	HandlePossibleError(result);
 }
 
-string Espeak::getVoice()
+string Espeak::GetVoice()
 {
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
 	return voice->name;
 }
 
-void Espeak::setVoice(const string voiceName)
+void Espeak::SetVoice(const string voiceName)
 {
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
 	voice->name = voiceName.c_str();
 	espeak_ng_STATUS result = espeak_ng_SetVoiceByProperties(voice);
-	handlePossibleError(result);
+	HandlePossibleError(result);
 }
 
-string Espeak::getLanguage()
+string Espeak::GetLanguage()
 {
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
 	return voice->languages;
 }
 
-void Espeak::setLanguage(string language)
+void Espeak::SetLanguage(string language)
 {
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
 	voice->languages = language.c_str();
 	espeak_ng_STATUS result = espeak_ng_SetVoiceByProperties(voice);
-	handlePossibleError(result);
+	HandlePossibleError(result);
 }
 
-void Espeak::speak(const string text) 
+void Espeak::Speak(const string text) 
 {
 	const char* textToBeSpoken = text.c_str();
 	int size = static_cast<int>(text.length());
 	espeak_Synth(textToBeSpoken, size + 1, 0, POS_CHARACTER, 0, synthesizerFlags, nullptr, nullptr);
 }
 
-void Espeak::cancel()
+void Espeak::Cancel()
 {
 	espeak_ng_STATUS result = espeak_ng_Cancel();
-	handlePossibleError(result);
+	HandlePossibleError(result);
 }

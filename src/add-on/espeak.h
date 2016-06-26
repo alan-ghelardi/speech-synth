@@ -14,28 +14,17 @@ private:
 public:
 	Espeak(const string dataPath);
 
-	unsigned int getPitch();
-
-	void setPitch(unsigned int pitch);
-
-	unsigned int getSpeed();
-
-	void setSpeed(unsigned int speed);
-
-	unsigned int getVolume();
-
-	void setVolume(unsigned int volume);
-
-	string getVoice();
-
-	void setVoice(const string voiceName);
-
-	string getLanguage();
-
-	void setLanguage(const string language);
-
-	void speak(const string text);
-
-	void cancel();
+	unsigned int GetPitch();
+	void SetPitch(unsigned int pitch);
+	unsigned int GetSpeed();
+	void SetSpeed(unsigned int speed);
+	unsigned int GetVolume();
+	void SetVolume(unsigned int volume);
+	string GetVoice();
+	void SetVoice(const string voiceName);
+	string GetLanguage();
+	void SetLanguage(const string language);
+	void Speak(const string text);
+	void Cancel();
 
 };
