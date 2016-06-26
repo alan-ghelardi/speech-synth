@@ -1,0 +1,6 @@
+[submodule "src/add-on/include/espeak-ng"]
+	path = src/add-on/include/espeak-ng
+	url = https://github.com/espeak-ng/espeak-ng.git
+[submodule "src/add-on/include/pcaudiolib"]
+	path = src/add-on/include/pcaudiolib
+	url = https://github.com/rhdunn/pcaudiolib.git
