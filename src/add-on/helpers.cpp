@@ -12,9 +12,9 @@ void HandlePossibleError(espeak_ng_STATUS result, espeak_ng_ERROR_CONTEXT* conte
 	}
 }
 
-string toString(v8::Local<v8::Value> value)
+const string ToString(v8::Local<v8::String> value)
 {
 	Nan::Utf8String utf8String(value);
-	string aString(*utf8String);
+	const string aString(*utf8String);
 	return aString;
 }

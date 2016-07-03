@@ -8,4 +8,4 @@ using namespace std;
 
 void HandlePossibleError(espeak_ng_STATUS result, espeak_ng_ERROR_CONTEXT* context = nullptr);
 
-string toString(v8::Local<v8::Value> value);
+const string ToString(v8::Local<v8::String> value);

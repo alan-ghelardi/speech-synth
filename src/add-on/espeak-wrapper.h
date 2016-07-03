@@ -6,12 +6,13 @@
 
 using namespace std;
 
-class EspeakWrapper : public Nan::ObjectWrap
+class EspeakWrapper 
+	: public Nan::ObjectWrap
 {
 
 private:
 	static Nan::Persistent<v8::Function> constructor;
-	Espeak espeak;
+	Espeak* espeak;
 
 	explicit EspeakWrapper(const string dataPath);
 	~EspeakWrapper();

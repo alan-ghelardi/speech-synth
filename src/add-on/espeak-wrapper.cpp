@@ -1,11 +1,12 @@
 #include "espeak-wrapper.h"
 #include "helpers.h"
+#include "speech-worker.h"
 
 Nan::Persistent<v8::Function> EspeakWrapper::constructor;
 
-EspeakWrapper::EspeakWrapper(const string dataPath):
-	espeak(dataPath)
+EspeakWrapper::EspeakWrapper(const string dataPath)
 {
+	espeak = new Espeak(dataPath);
 }
 
 EspeakWrapper::~EspeakWrapper()
@@ -18,6 +19,7 @@ void EspeakWrapper::Init(v8::Local<v8::Object> exports)
 
 	v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
 	tpl->SetClassName(Nan::New("Espeak").ToLocalChecked());
+	tpl->InstanceTemplate()->SetInternalFieldCount(1);
 	Nan::SetPrototypeMethod(tpl, "speak", Speak);
 	Nan::SetPrototypeMethod(tpl, "cancel", Cancel);
 	constructor.Reset(tpl->GetFunction());
@@ -32,7 +34,7 @@ void EspeakWrapper::New(const Nan::FunctionCallbackInfo<v8::Value>& info)
 	}
 	else
 	{
-		const string dataPath = toString(info[0]);
+		const string dataPath = ToString(info[0].As<v8::String>());
 		EspeakWrapper* wrapper = new EspeakWrapper(dataPath);
 		wrapper->Wrap(info.This());
 		info.GetReturnValue().Set(info.This());
@@ -42,14 +44,18 @@ void EspeakWrapper::New(const Nan::FunctionCallbackInfo<v8::Value>& info)
 void EspeakWrapper::Speak(const Nan::FunctionCallbackInfo<v8::Value>& info)
 {
 	EspeakWrapper* wrapper = ObjectWrap::Unwrap<EspeakWrapper>(info.Holder());
-	const string text = toString(info[0]);
-	wrapper->espeak.Speak(text);
+	Espeak* espeak = wrapper->espeak;
+	string text = ToString(info[0].As<v8::String>());
+	Nan::Callback* callback = new Nan::Callback(info[1].As<v8::Function>());
+
+	Nan::AsyncQueueWorker(new SpeechWorker(espeak, &text, callback));
+
 	info.GetReturnValue().SetUndefined();
 }
 
 void EspeakWrapper::Cancel(const Nan::FunctionCallbackInfo<v8::Value>& info)
 {
 	EspeakWrapper* wrapper = ObjectWrap::Unwrap<EspeakWrapper>(info.Holder());
-	wrapper->espeak.Cancel();
+	wrapper->espeak->Cancel();
 	info.GetReturnValue().SetUndefined();
 }

@@ -1,8 +1,9 @@
 #include <nan.h>
 #include "espeak-wrapper.h"
 
-void InitAll(v8::Local<v8::Object> exports) {
+void Init(v8::Local<v8::Object> exports) 
+{
 	EspeakWrapper::Init(exports);
 }
 
-NODE_MODULE(addon, InitAll)
+NODE_MODULE(espeak_addon, Init)
