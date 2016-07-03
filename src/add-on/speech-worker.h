@@ -19,6 +19,5 @@ public:
 	~SpeechWorker();
 
 	void Execute();
-	void HandleOKCallback();
 
 };

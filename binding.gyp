@@ -3,6 +3,7 @@
     {
       "target_name": "espeak_addon",
       "sources": [
+        "src/add-on/disposable.cpp",
         "src/add-on/espeak.cpp",
         "src/add-on/espeak-addon.cpp",
         "src/add-on/espeak-wrapper.cpp",
