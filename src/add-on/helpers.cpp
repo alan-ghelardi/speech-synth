@@ -1,14 +1,19 @@
+#include <excpt.h>
 #include "helpers.h"
 
 void HandlePossibleError(espeak_ng_STATUS result, espeak_ng_ERROR_CONTEXT* context)
 {
 	if (result != ENS_OK)
 	{
-		espeak_ng_PrintStatusCodeMessage(result, stderr, *context);
+		char message[512];
+		espeak_ng_GetStatusCodeMessage(result, message, sizeof(message));
+
 		if (context != nullptr)
 		{
 			espeak_ng_ClearErrorContext(context);
 		}
+
+		throw runtime_error(message);
 	}
 }
 

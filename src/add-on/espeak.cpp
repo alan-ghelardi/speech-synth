@@ -81,7 +81,8 @@ void Espeak::Speak(const string text)
 {
 	const char* textToBeSpoken = text.c_str();
 	int size = static_cast<int>(text.length());
-	espeak_Synth(textToBeSpoken, size + 1, 0, POS_CHARACTER, 0, synthesizerFlags, nullptr, nullptr);
+	espeak_ng_STATUS result = espeak_ng_Synthesize(textToBeSpoken, size, 0, POS_CHARACTER, 0, synthesizerFlags, nullptr, nullptr);
+	HandlePossibleError(result);
 }
 
 void Espeak::Cancel()
