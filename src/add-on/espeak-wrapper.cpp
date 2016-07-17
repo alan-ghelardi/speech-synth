@@ -1,7 +1,6 @@
 #include "espeak-wrapper.h"
 #include "helpers.h"
 #include "speech-worker.h"
-#include "stop-worker.h"
 
 Nan::Persistent<v8::Function> EspeakWrapper::constructor;
 
@@ -57,9 +56,5 @@ void EspeakWrapper::Speak(const Nan::FunctionCallbackInfo<v8::Value>& info)
 void EspeakWrapper::Cancel(const Nan::FunctionCallbackInfo<v8::Value>& info)
 {
 	EspeakWrapper* wrapper = ObjectWrap::Unwrap<EspeakWrapper>(info.Holder());
-	Nan::Callback* callback = new Nan::Callback(info[0].As<v8::Function>());
-
-	Nan::AsyncQueueWorker(new StopWorker(wrapper->espeak, callback));
-
 	info.GetReturnValue().SetUndefined();
 }

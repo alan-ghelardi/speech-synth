@@ -2,6 +2,7 @@
 
 #include <string>
 #include <espeak/speak_lib.h>
+#include "wave-player.h"
 
 using namespace std;
 
@@ -9,7 +10,10 @@ class Espeak
 {
 
 private:
-	int synthesizerFlags = espeakCHARS_AUTO | espeakPHONEMES | espeakENDPAUSE;
+	int synthesizerFlags = espeakCHARS_UTF8 | espeakPHONEMES | espeakSSML;
+	WavePlayer* player;
+
+	static int SynthesizerCallback(short* wav, int numberOfSamples, espeak_EVENT* events);
 
 public:
 	Espeak(const string dataPath);
@@ -26,5 +30,6 @@ public:
 	void SetLanguage(const string language);
 	void Speak(const string text);
 	void Cancel();
+	void Release();
 
 };

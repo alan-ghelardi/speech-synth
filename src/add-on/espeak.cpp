@@ -2,9 +2,7 @@
 #include "espeak.h"
 #include "helpers.h"
 
-#ifndef PLAYBACK_MODE
-#define PLAYBACK_MODE ENOUTPUT_MODE_SPEAK_AUDIO
-#endif
+static const unsigned BUFFER_SIZE_IN_MILLISECONDS = 300;
 
 Espeak::Espeak(const string dataPath)
 {
@@ -12,8 +10,27 @@ Espeak::Espeak(const string dataPath)
 	espeak_ng_ERROR_CONTEXT context = nullptr;
 	espeak_ng_STATUS result = espeak_ng_Initialize(&context);
 	HandlePossibleError(result, &context);
-	result = espeak_ng_InitializeOutput(PLAYBACK_MODE, 0, nullptr);
+	result = espeak_ng_InitializeOutput(ENOUTPUT_MODE_SYNCHRONOUS, BUFFER_SIZE_IN_MILLISECONDS, nullptr);
 	HandlePossibleError(result);
+	player = WavePlayer::New(espeak_ng_GetSampleRate(), BUFFER_SIZE_IN_MILLISECONDS);
+	espeak_SetSynthCallback(Espeak::SynthesizerCallback);
+}
+
+int Espeak::SynthesizerCallback(short* chunks, int numberOfSamples, espeak_EVENT* events)
+{
+	WavePlayer* player = (WavePlayer*)events->user_data;
+
+	if (chunks == nullptr)
+	{
+		player->Stop();
+	}
+	else if (numberOfSamples)
+	{
+		WaveData data(chunks, numberOfSamples);
+		player->Play(data);
+	}
+
+	return 0;
 }
 
 unsigned int Espeak::GetPitch()
@@ -77,11 +94,10 @@ void Espeak::SetLanguage(string language)
 	HandlePossibleError(result);
 }
 
-void Espeak::Speak(const string text) 
+void Espeak::Speak(const string text)
 {
 	const char* textToBeSpoken = text.c_str();
-	int size = static_cast<int>(text.length());
-	espeak_ng_STATUS result = espeak_ng_Synthesize(textToBeSpoken, size, 0, POS_CHARACTER, 0, synthesizerFlags, nullptr, nullptr);
+	espeak_ng_STATUS result = espeak_ng_Synthesize(textToBeSpoken, 0, 0, POS_CHARACTER, 0, synthesizerFlags, nullptr, this->player);
 	HandlePossibleError(result);
 }
 
@@ -89,4 +105,11 @@ void Espeak::Cancel()
 {
 	espeak_ng_STATUS result = espeak_ng_Cancel();
 	HandlePossibleError(result);
+}
+
+void Espeak::Release()
+{
+	player->Release();
+	delete player;
+	espeak_ng_Terminate();
 }
