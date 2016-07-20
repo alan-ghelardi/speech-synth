@@ -1,10 +1,7 @@
 #pragma once
 
-#include <string>
 #include <nan.h>
 #include "espeak.h"
-
-using namespace std;
 
 class SpeechWorker :
 	public Nan::AsyncWorker
@@ -12,10 +9,10 @@ class SpeechWorker :
 
 private:
 	Espeak* espeak;
-	string* text;
+	const char* text;
 
 public:
-	SpeechWorker(Espeak* espeak, string* text, Nan::Callback* callback);
+	SpeechWorker(Espeak* espeak, const char* text, Nan::Callback* callback);
 	~SpeechWorker();
 
 	void Execute();

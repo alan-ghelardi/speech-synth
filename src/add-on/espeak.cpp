@@ -7,10 +7,10 @@ static const int CONTINUE_SYNTHESIS = 0;
 static const int STOP_SYNTHESIS = 1;
 static const int SYNTHESIZER_FLAGS = espeakCHARS_AUTO | espeakSSML | espeakPHONEMES;
 
-Espeak::Espeak(const string dataPath) :
+Espeak::Espeak(const char* dataPath) :
 	isSpeaking(false)
 {
-	espeak_ng_InitializePath(dataPath.c_str());
+	espeak_ng_InitializePath(dataPath);
 	espeak_ng_ERROR_CONTEXT context = nullptr;
 	espeak_ng_STATUS result = espeak_ng_Initialize(&context);
 	HandlePossibleError(result, &context);
@@ -72,39 +72,38 @@ void Espeak::SetVolume(unsigned int volume)
 	HandlePossibleError(result);
 }
 
-string Espeak::GetVoice()
+const char* Espeak::GetVoice()
 {
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
 	return voice->name;
 }
 
-void Espeak::SetVoice(const string voiceName)
+void Espeak::SetVoice(const char* voiceName)
 {
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
-	voice->name = voiceName.c_str();
+	voice->name = voiceName;
 	espeak_ng_STATUS result = espeak_ng_SetVoiceByProperties(voice);
 	HandlePossibleError(result);
 }
 
-string Espeak::GetLanguage()
+const char* Espeak::GetLanguage()
 {
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
 	return voice->languages;
 }
 
-void Espeak::SetLanguage(string language)
+void Espeak::SetLanguage(const char* language)
 {
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
-	voice->languages = language.c_str();
+	voice->languages = language;
 	espeak_ng_STATUS result = espeak_ng_SetVoiceByProperties(voice);
 	HandlePossibleError(result);
 }
 
-void Espeak::Speak(const string text)
+void Espeak::Speak(const char* text)
 {
 	isSpeaking = true;
-	const char* textToBeSpoken = text.c_str();
-	espeak_ng_STATUS result = espeak_ng_Synthesize(textToBeSpoken, 0, 0, POS_CHARACTER, 0, SYNTHESIZER_FLAGS, nullptr, this);
+	espeak_ng_STATUS result = espeak_ng_Synthesize(text, 0, 0, POS_CHARACTER, 0, SYNTHESIZER_FLAGS, nullptr, this);
 	HandlePossibleError(result);
 }
 

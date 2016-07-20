@@ -13,13 +13,12 @@ void HandlePossibleError(espeak_ng_STATUS result, espeak_ng_ERROR_CONTEXT* conte
 			espeak_ng_ClearErrorContext(context);
 		}
 
-		throw runtime_error(message);
+		throw std::runtime_error(message);
 	}
 }
 
-const string ToString(v8::Local<v8::String> value)
+const char* ToString(v8::Local<v8::String> value)
 {
 	Nan::Utf8String utf8String(value);
-	const string aString(*utf8String);
-	return aString;
+	return *utf8String;
 }

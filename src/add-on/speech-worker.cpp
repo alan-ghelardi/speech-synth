@@ -1,6 +1,6 @@
 #include "speech-worker.h"
 
-SpeechWorker::SpeechWorker(Espeak* espeak, string * text, Nan::Callback* callback)
+SpeechWorker::SpeechWorker(Espeak* espeak, const char* text, Nan::Callback* callback)
 	: AsyncWorker(callback),
 	espeak(espeak),
 	text(text)
@@ -15,7 +15,7 @@ void SpeechWorker::Execute()
 {
 	try
 	{
-		espeak->Speak(*text);
+		espeak->Speak(text);
 	}
 	catch (const std::exception& error)
 	{

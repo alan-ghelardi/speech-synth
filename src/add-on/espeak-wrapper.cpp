@@ -4,7 +4,7 @@
 
 Nan::Persistent<v8::Function> EspeakWrapper::constructor;
 
-EspeakWrapper::EspeakWrapper(const string dataPath)
+EspeakWrapper::EspeakWrapper(const char* dataPath)
 {
 	espeak = new Espeak(dataPath);
 }
@@ -34,7 +34,7 @@ void EspeakWrapper::New(const Nan::FunctionCallbackInfo<v8::Value>& info)
 	}
 	else
 	{
-		const string dataPath = ToString(info[0].As<v8::String>());
+		const char* dataPath = ToString(info[0].As<v8::String>());
 		EspeakWrapper* wrapper = new EspeakWrapper(dataPath);
 		wrapper->Wrap(info.This());
 		info.GetReturnValue().Set(info.This());
@@ -45,10 +45,10 @@ void EspeakWrapper::Speak(const Nan::FunctionCallbackInfo<v8::Value>& info)
 {
 	EspeakWrapper* wrapper = ObjectWrap::Unwrap<EspeakWrapper>(info.Holder());
 	Espeak* espeak = wrapper->espeak;
-	string text = ToString(info[0].As<v8::String>());
+	const char* text = ToString(info[0].As<v8::String>());
 	Nan::Callback* callback = new Nan::Callback(info[1].As<v8::Function>());
 
-	Nan::AsyncQueueWorker(new SpeechWorker(espeak, &text, callback));
+	Nan::AsyncQueueWorker(new SpeechWorker(espeak, text, callback));
 
 	info.GetReturnValue().SetUndefined();
 }

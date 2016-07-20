@@ -1,10 +1,7 @@
 #pragma once
 
-#include <string>
 #include <nan.h>
 #include "espeak.h"
-
-using namespace std;
 
 class EspeakWrapper 
 	: public Nan::ObjectWrap
@@ -14,7 +11,7 @@ private:
 	static Nan::Persistent<v8::Function> constructor;
 	Espeak* espeak;
 
-	explicit EspeakWrapper(const string dataPath);
+	explicit EspeakWrapper(const char* dataPath);
 	~EspeakWrapper();
 
 	static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
