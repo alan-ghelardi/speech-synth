@@ -21,7 +21,7 @@ void EspeakWrapper::Init(v8::Local<v8::Object> exports)
 	tpl->SetClassName(Nan::New("Espeak").ToLocalChecked());
 	tpl->InstanceTemplate()->SetInternalFieldCount(1);
 	Nan::SetPrototypeMethod(tpl, "speak", Speak);
-	Nan::SetPrototypeMethod(tpl, "cancel", Cancel);
+	Nan::SetPrototypeMethod(tpl, "stop", Stop);
 	constructor.Reset(tpl->GetFunction());
 	exports->Set(Nan::New("Espeak").ToLocalChecked(), tpl->GetFunction());
 }
@@ -53,8 +53,9 @@ void EspeakWrapper::Speak(const Nan::FunctionCallbackInfo<v8::Value>& info)
 	info.GetReturnValue().SetUndefined();
 }
 
-void EspeakWrapper::Cancel(const Nan::FunctionCallbackInfo<v8::Value>& info)
+void EspeakWrapper::Stop(const Nan::FunctionCallbackInfo<v8::Value>& info)
 {
 	EspeakWrapper* wrapper = ObjectWrap::Unwrap<EspeakWrapper>(info.Holder());
+	wrapper->espeak->Stop();
 	info.GetReturnValue().SetUndefined();
 }

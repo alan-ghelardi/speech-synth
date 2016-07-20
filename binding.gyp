@@ -4,8 +4,7 @@
       "target_name": "espeak_addon",
       "sources": [
         "src/add-on/direct-sound-player.cpp",
-        "src/add-on/disposable.cpp",
-        "src/add-on/espeak.cpp",
+                "src/add-on/espeak.cpp",
         "src/add-on/espeak-addon.cpp",
         "src/add-on/espeak-wrapper.cpp",
         "src/add-on/helpers.cpp",

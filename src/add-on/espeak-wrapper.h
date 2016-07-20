@@ -19,7 +19,7 @@ private:
 
 	static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
 	static void Speak(const Nan::FunctionCallbackInfo<v8::Value>& info);
-	static void Cancel(const Nan::FunctionCallbackInfo<v8::Value>& info);
+	static void Stop(const Nan::FunctionCallbackInfo<v8::Value>& info);
 
 public:
 	static void Init(v8::Local<v8::Object> exports);

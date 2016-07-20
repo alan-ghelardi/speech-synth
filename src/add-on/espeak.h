@@ -10,7 +10,7 @@ class Espeak
 {
 
 private:
-	int synthesizerFlags = espeakCHARS_UTF8 | espeakPHONEMES | espeakSSML;
+	bool isSpeaking;
 	WavePlayer* player;
 
 	static int SynthesizerCallback(short* wav, int numberOfSamples, espeak_EVENT* events);
@@ -29,7 +29,7 @@ public:
 	string GetLanguage();
 	void SetLanguage(const string language);
 	void Speak(const string text);
-	void Cancel();
+	void Stop();
 	void Release();
 
 };

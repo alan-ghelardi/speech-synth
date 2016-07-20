@@ -142,6 +142,8 @@ void DirectSoundPlayer::WriteWaveData(const WaveData& data)
 
 void DirectSoundPlayer::Stop()
 {
+	HRESULT result = soundBuffer->Stop();
+	RaiseExceptionUnlessSucceeded(result, "Failed to stop the playback");
 }
 
 void DirectSoundPlayer::Release()

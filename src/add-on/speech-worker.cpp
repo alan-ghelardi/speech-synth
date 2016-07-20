@@ -1,11 +1,10 @@
-#include "disposable.h"
 #include "speech-worker.h"
 
-SpeechWorker::SpeechWorker(Espeak* espeak_, string * text_, Nan::Callback* callback)
-	: AsyncWorker(callback)
+SpeechWorker::SpeechWorker(Espeak* espeak, string * text, Nan::Callback* callback)
+	: AsyncWorker(callback),
+	espeak(espeak),
+	text(text)
 {
-	espeak = espeak_;
-	text = text_;
 }
 
 SpeechWorker::~SpeechWorker()
@@ -14,6 +13,12 @@ SpeechWorker::~SpeechWorker()
 
 void SpeechWorker::Execute()
 {
-	Disposable disposable;
+	try
+	{
 		espeak->Speak(*text);
+	}
+	catch (const std::exception& error)
+	{
+		SetErrorMessage(error.what());
+	}
 }
