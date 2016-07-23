@@ -8,16 +8,18 @@ static const int STOP_SYNTHESIS = 1;
 static const int SYNTHESIZER_FLAGS = espeakCHARS_AUTO | espeakSSML | espeakPHONEMES;
 
 Espeak::Espeak(const char* dataPath) :
-	isSpeaking(false)
+	isSpeaking(false),
+	availableVoices(vector<const char*>())
 {
 	espeak_ng_InitializePath(dataPath);
 	espeak_ng_ERROR_CONTEXT context = nullptr;
 	espeak_ng_STATUS result = espeak_ng_Initialize(&context);
-	HandlePossibleError(result, &context);
+	RaiseExceptionUnlessSucceeded(result, &context);
 	result = espeak_ng_InitializeOutput(ENOUTPUT_MODE_SYNCHRONOUS, BUFFER_SIZE_IN_MILLISECONDS, nullptr);
-	HandlePossibleError(result);
+	RaiseExceptionUnlessSucceeded(result);
 	player = WavePlayer::New(espeak_ng_GetSampleRate(), BUFFER_SIZE_IN_MILLISECONDS);
 	espeak_SetSynthCallback(Espeak::SynthesizerCallback);
+	FillAvailableVoices();
 }
 
 int Espeak::SynthesizerCallback(short* chunks, int numberOfSamples, espeak_EVENT* events)
@@ -39,6 +41,17 @@ int Espeak::SynthesizerCallback(short* chunks, int numberOfSamples, espeak_EVENT
 	return result;
 }
 
+void Espeak::FillAvailableVoices()
+{
+	const espeak_VOICE** voices = espeak_ListVoices(nullptr);
+	const espeak_VOICE* currentVoice;
+
+	for (int i = 0; (currentVoice = voices[i]) != nullptr; i++)
+	{
+		availableVoices.push_back(currentVoice->name);
+	}
+}
+
 unsigned int Espeak::GetPitch()
 {
 	return espeak_GetParameter(espeakPITCH, 1);
@@ -47,7 +60,7 @@ unsigned int Espeak::GetPitch()
 void Espeak::SetPitch(unsigned int pitch)
 {
 	espeak_ng_STATUS result = espeak_ng_SetParameter(espeakPITCH, pitch, 0);
-	HandlePossibleError(result);
+	RaiseExceptionUnlessSucceeded(result);
 }
 
 unsigned int Espeak::GetSpeed()
@@ -58,7 +71,7 @@ unsigned int Espeak::GetSpeed()
 void Espeak::SetSpeed(unsigned int speed)
 {
 	espeak_ng_STATUS result = espeak_ng_SetParameter(espeakRATE, speed, 0);
-	HandlePossibleError(result);
+	RaiseExceptionUnlessSucceeded(result);
 }
 
 unsigned int Espeak::GetVolume()
@@ -69,7 +82,7 @@ unsigned int Espeak::GetVolume()
 void Espeak::SetVolume(unsigned int volume)
 {
 	espeak_ng_STATUS result = espeak_ng_SetParameter(espeakVOLUME, volume, 0);
-	HandlePossibleError(result);
+	RaiseExceptionUnlessSucceeded(result);
 }
 
 const char* Espeak::GetVoice()
@@ -83,7 +96,7 @@ void Espeak::SetVoice(const char* voiceName)
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
 	voice->name = voiceName;
 	espeak_ng_STATUS result = espeak_ng_SetVoiceByProperties(voice);
-	HandlePossibleError(result);
+	RaiseExceptionUnlessSucceeded(result);
 }
 
 const char* Espeak::GetLanguage()
@@ -97,14 +110,19 @@ void Espeak::SetLanguage(const char* language)
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
 	voice->languages = language;
 	espeak_ng_STATUS result = espeak_ng_SetVoiceByProperties(voice);
-	HandlePossibleError(result);
+	RaiseExceptionUnlessSucceeded(result);
+}
+
+const vector<const char*> Espeak::GetAvailableVoices()
+{
+	return availableVoices;
 }
 
 void Espeak::Speak(const char* text)
 {
 	isSpeaking = true;
 	espeak_ng_STATUS result = espeak_ng_Synthesize(text, 0, 0, POS_CHARACTER, 0, SYNTHESIZER_FLAGS, nullptr, this);
-	HandlePossibleError(result);
+	RaiseExceptionUnlessSucceeded(result);
 }
 
 void Espeak::Stop()

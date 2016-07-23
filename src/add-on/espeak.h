@@ -1,7 +1,10 @@
 #pragma once
 
 #include <espeak/speak_lib.h>
+#include <vector>
 #include "wave-player.h"
+
+using std::vector;
 
 class Espeak 
 {
@@ -9,8 +12,10 @@ class Espeak
 private:
 	bool isSpeaking;
 	WavePlayer* player;
+	vector<const char*> availableVoices;
 
 	static int SynthesizerCallback(short* wav, int numberOfSamples, espeak_EVENT* events);
+	void FillAvailableVoices();
 
 public:
 	Espeak(const char* dataPath);
@@ -25,6 +30,7 @@ public:
 	void SetVoice(const char* voiceName);
 	const char* GetLanguage();
 	void SetLanguage(const char* language);
+	const vector<const char*> GetAvailableVoices();
 	void Speak(const char* text);
 	void Stop();
 	void Release();
