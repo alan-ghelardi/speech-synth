@@ -49,9 +49,3 @@ void RaiseExceptionUnlessSucceeded(espeak_ng_STATUS result, espeak_ng_ERROR_CONT
 		throw runtime_error(message);
 	}
 }
-
-const char* ToString(v8::Local<v8::String> value)
-{
-	Nan::Utf8String utf8String(value);
-	return *utf8String;
-}

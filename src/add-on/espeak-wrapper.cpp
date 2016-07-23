@@ -1,8 +1,13 @@
 #include "espeak-wrapper.h"
-#include "helpers.h"
 #include "speech-worker.h"
 
 Nan::Persistent<v8::Function> EspeakWrapper::constructor;
+
+const char* ToString(v8::Local<v8::String> value)
+{
+	Nan::Utf8String utf8String(value);
+	return *utf8String;
+}
 
 EspeakWrapper::EspeakWrapper(const char* dataPath)
 {
