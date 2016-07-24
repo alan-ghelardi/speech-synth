@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <stdio.h>
+#include <sstream>
 #include "helpers.h"
 
 using namespace std;
@@ -14,7 +15,7 @@ char* ReadMessageFrom(FILE*& stream)
 	return message;
 }
 
-const char* GetErrorMessage(espeak_ng_STATUS result, espeak_ng_ERROR_CONTEXT context)
+const string GetErrorMessage(espeak_ng_STATUS result, const string reason, espeak_ng_ERROR_CONTEXT& context)
 {
 	FILE* stream = nullptr;
 	char* message = nullptr;
@@ -32,14 +33,27 @@ const char* GetErrorMessage(espeak_ng_STATUS result, espeak_ng_ERROR_CONTEXT con
 		espeak_ng_GetStatusCodeMessage(result, message, size);
 	}
 
+	if (reason != "")
+	{
+		stringstream buffer;
+		buffer << reason << ". " << message;
+		return buffer.str();
+	}
+
 	return message;
 }
 
 void RaiseExceptionUnlessSucceeded(espeak_ng_STATUS result, espeak_ng_ERROR_CONTEXT* context)
 {
+	RaiseExceptionUnlessSucceeded(result, "", context);
+}
+
+void RaiseExceptionUnlessSucceeded(espeak_ng_STATUS result, const string reason, espeak_ng_ERROR_CONTEXT* context)
+{
 	if (result != ENS_OK)
 	{
-		const char* message = GetErrorMessage(result, *context);
+		espeak_ng_ERROR_CONTEXT errorContext = context != nullptr ? *context : nullptr;
+		const string message = GetErrorMessage(result, reason, errorContext);
 
 		if (context != nullptr)
 		{

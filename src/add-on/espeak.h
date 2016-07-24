@@ -6,19 +6,23 @@
 
 using std::vector;
 
-class Espeak 
+class Espeak
 {
 
 private:
+	const char* dataPath;
 	bool isSpeaking;
 	WavePlayer* player;
 	vector<const char*> availableVoices;
 
-	static int SynthesizerCallback(short* wav, int numberOfSamples, espeak_EVENT* events);
+	void InitializeLibEspeak(const bool setPathOnly);
 	void FillAvailableVoices();
+	void CompileAllDictionaries(const char* dictionariesPath);
+	void CompileDictionary(const char* voice, const char* dictionariesPath);
+	static int SynthesizerCallback(short* wav, int numberOfSamples, espeak_EVENT* events);
 
 public:
-	Espeak(const char* dataPath);
+	Espeak(const char* dataPath, const bool isCompiling = false);
 
 	unsigned int GetPitch();
 	void SetPitch(unsigned int pitch);
@@ -31,6 +35,7 @@ public:
 	const char* GetLanguage();
 	void SetLanguage(const char* language);
 	const vector<const char*> GetAvailableVoices();
+	void CompileData(const char* dictionariesPath);
 	void Speak(const char* text);
 	void Stop();
 	void Release();
