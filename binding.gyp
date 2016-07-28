@@ -3,6 +3,7 @@
     {
       "target_name": "espeak_addon",
       "sources": [
+          "src/add-on/compilation-worker.cpp",
         "src/add-on/direct-sound-player.cpp",
                 "src/add-on/espeak.cpp",
         "src/add-on/espeak-addon.cpp",

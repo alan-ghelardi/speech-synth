@@ -11,10 +11,11 @@ private:
 	static Nan::Persistent<v8::Function> constructor;
 	Espeak* espeak;
 
-	explicit EspeakWrapper(const char* dataPath);
+	EspeakWrapper(const char* dataPath, bool isCompiling);
 	~EspeakWrapper();
 
 	static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
+	static void CompileData(const Nan::FunctionCallbackInfo<v8::Value>& info);
 	static void Speak(const Nan::FunctionCallbackInfo<v8::Value>& info);
 	static void Stop(const Nan::FunctionCallbackInfo<v8::Value>& info);
 
