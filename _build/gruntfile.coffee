@@ -10,6 +10,7 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON('package.json')
 
     clean:
+      build: 'build'
       dist: 'dist'
 
     coffeelint:
@@ -28,6 +29,14 @@ module.exports = (grunt) ->
         dest: 'dist',
         ext: '.js'
 
+    copy:
+      espeak_addon:
+        expand: true
+        flatten: true
+        src: 'build/Release/espeak_addon.node'
+        dest: 'dist/win32/'
+
+  grunt.registerTask('default', [ 'validate', 'compile-addon' ])
   grunt.registerTask('validate', [ 'coffeelint' ])
-  grunt.registerTask('compile-addon', [ 'node-gyp:configure', 'build-espeak-ng', 'node-gyp:build' ])
+  grunt.registerTask('compile-addon', [ 'node-gyp:configure', 'build-espeak-ng', 'node-gyp:build', 'copy:espeak_addon', 'clean:build' ])
   
