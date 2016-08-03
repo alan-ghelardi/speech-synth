@@ -26,7 +26,6 @@
   },
   "homepage": "https://github.com/alan-ghelardi/speech-synth#readme",
   "devDependencies": {
-    "fs-extra": "^0.30.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-coffeelint": "0.0.16",
