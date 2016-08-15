@@ -10,7 +10,6 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON('package.json')
 
     clean:
-      build: 'build'
       dist: 'dist'
       'post-build-addon': [
         'build/',
@@ -53,11 +52,18 @@ module.exports = (grunt) ->
         src: 'build/Release/espeak_addon.node'
         dest: 'dist/win32/'
 
-  grunt.registerTask('default', [ 'validate', 'compile-addon' ])
+      'pre-compile-data':
+        cwd: 'src/add-on/include/espeak-ng'
+        expand: true
+        src: [ 'dictsource/**', 'espeak-data/**', 'phsource/**' ]
+        dest: 'dist/'
+
+  grunt.registerTask('default', [ 'validate', 'build-addon' ])
 
   grunt.registerTask('validate', [ 'coffeelint' ])
-  
-  grunt.registerTask('compile-addon', [
+
+  grunt.registerTask('build-addon', [
+    'clean:dist'
     'node-gyp:configure'
     'copy:pre-build-espeak'
     'build-espeak-ng'
@@ -65,3 +71,5 @@ module.exports = (grunt) ->
     'node-gyp:build'
     'copy:post-build-addon'
     'clean:post-build-addon' ])
+
+  grunt.registerTask('compile-data', [ 'copy:pre-compile-data', 'compile-espeak-data' ])
