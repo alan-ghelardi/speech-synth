@@ -11,11 +11,11 @@ static const int CONTINUE_SYNTHESIS = 0;
 static const int STOP_SYNTHESIS = 1;
 static const int SYNTHESIZER_FLAGS = espeakCHARS_AUTO | espeakSSML | espeakPHONEMES;
 
-Espeak::Espeak(const char* dataPath, const bool isCompiling) :
+Espeak::Espeak(const string dataPath, const bool isCompiling) :
 	dataPath(dataPath),
 	isSpeaking(false),
 	player(nullptr),
-	availableVoices(vector<const char*>())
+	availableVoices(vector<string>())
 {
 	InitializeLibEspeak(isCompiling);
 	FillAvailableVoices();
@@ -23,14 +23,13 @@ Espeak::Espeak(const char* dataPath, const bool isCompiling) :
 	if (!isCompiling)
 	{
 		player = WavePlayer::New(espeak_ng_GetSampleRate(), BUFFER_SIZE_IN_MILLISECONDS);
+		espeak_SetSynthCallback(Espeak::SynthesizerCallback);
 	}
-
-	espeak_SetSynthCallback(Espeak::SynthesizerCallback);
 }
 
 void Espeak::InitializeLibEspeak(const bool setPathOnly)
 {
-	espeak_ng_InitializePath(dataPath);
+	espeak_ng_InitializePath(dataPath.c_str());
 
 	if (!setPathOnly)
 	{
@@ -105,16 +104,16 @@ void Espeak::SetVolume(unsigned int volume)
 	RaiseExceptionUnlessSucceeded(result);
 }
 
-const char* Espeak::GetVoice()
+const string Espeak::GetVoice()
 {
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
 	return voice->name;
 }
 
-void Espeak::SetVoice(const char* voiceName)
+void Espeak::SetVoice(const string voiceName)
 {
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
-	voice->name = voiceName;
+	voice->name = voiceName.c_str();
 	espeak_ng_STATUS result = espeak_ng_SetVoiceByProperties(voice);
 
 	stringstream buffer;
@@ -122,26 +121,26 @@ void Espeak::SetVoice(const char* voiceName)
 	RaiseExceptionUnlessSucceeded(result, buffer.str());
 }
 
-const char* Espeak::GetLanguage()
+const string Espeak::GetLanguage()
 {
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
 	return voice->languages;
 }
 
-void Espeak::SetLanguage(const char* language)
+void Espeak::SetLanguage(const string language)
 {
 	espeak_VOICE* voice = espeak_GetCurrentVoice();
-	voice->languages = language;
+	voice->languages = language.c_str();
 	espeak_ng_STATUS result = espeak_ng_SetVoiceByProperties(voice);
 	RaiseExceptionUnlessSucceeded(result);
 }
 
-const vector<const char*> Espeak::GetAvailableVoices()
+const vector<string> Espeak::GetAvailableVoices()
 {
 	return availableVoices;
 }
 
-void Espeak::CompileData(const char* dictionariesPath)
+void Espeak::CompileData(const string dictionariesPath)
 {
 	espeak_ng_ERROR_CONTEXT context = nullptr;
 	espeak_ng_STATUS result = espeak_ng_CompileIntonation(stdout, &context);
@@ -151,9 +150,9 @@ void Espeak::CompileData(const char* dictionariesPath)
 	CompileAllDictionaries(dictionariesPath);
 }
 
-void Espeak::CompileAllDictionaries(const char* dictionariesPath)
+void Espeak::CompileAllDictionaries(const string dictionariesPath)
 {
-	for (const char* voice : availableVoices)
+	for (const string voice : availableVoices)
 	{
 		InitializeLibEspeak(false);
 
@@ -168,18 +167,18 @@ void Espeak::CompileAllDictionaries(const char* dictionariesPath)
 	}
 }
 
-void Espeak::CompileDictionary(const char* voice, const char* dictionariesPath)
+void Espeak::CompileDictionary(const string voice, const string dictionariesPath)
 {
 	SetVoice(voice);
 	espeak_ng_ERROR_CONTEXT context = nullptr;
-	espeak_ng_STATUS result = espeak_ng_CompileDictionary(dictionariesPath, nullptr, stdout, 0, &context);
+	espeak_ng_STATUS result = espeak_ng_CompileDictionary(dictionariesPath.c_str(), nullptr, nullptr, 0, &context);
 	RaiseExceptionUnlessSucceeded(result, &context);
 }
 
-void Espeak::Speak(const char* text)
+void Espeak::Speak(const string text)
 {
 	isSpeaking = true;
-	espeak_ng_STATUS result = espeak_ng_Synthesize(text, 0, 0, POS_CHARACTER, 0, SYNTHESIZER_FLAGS, nullptr, this);
+	espeak_ng_STATUS result = espeak_ng_Synthesize(text.c_str(), 0, 0, POS_CHARACTER, 0, SYNTHESIZER_FLAGS, nullptr, this);
 	RaiseExceptionUnlessSucceeded(result);
 }
 

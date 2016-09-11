@@ -18,7 +18,14 @@ const bool ToBoolean(const v8::Local<v8::Value> value)
 
 EspeakWrapper::EspeakWrapper(const char* dataPath, const bool isCompiling)
 {
-	espeak = new Espeak(dataPath, isCompiling);
+	try
+	{
+		espeak = new Espeak(dataPath, isCompiling);
+	}
+	catch (const std::exception& error)
+	{
+		Nan::ThrowError(error.what());
+	}
 }
 
 EspeakWrapper::~EspeakWrapper()

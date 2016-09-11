@@ -16,6 +16,10 @@ module.exports = (grunt) ->
         'src/add-on/include/espeak-ng/src/pcaudiolib/',
         'src/add-on/include/espeak-ng/src/windows/X64/'
       ]
+      'post-compile-data': [
+        'dist/dictsource'
+        'dist/phsource'
+      ]
 
     coffeelint:
       options:
@@ -58,7 +62,7 @@ module.exports = (grunt) ->
         src: [ 'dictsource/**', 'espeak-data/**', 'phsource/**' ]
         dest: 'dist/'
 
-  grunt.registerTask('default', [ 'validate', 'build-addon' ])
+  grunt.registerTask('default', [ 'validate', 'build-addon', 'coffee', 'compile-data' ])
 
   grunt.registerTask('validate', [ 'coffeelint' ])
 
@@ -72,4 +76,4 @@ module.exports = (grunt) ->
     'copy:post-build-addon'
     'clean:post-build-addon' ])
 
-  grunt.registerTask('compile-data', [ 'copy:pre-compile-data', 'compile-espeak-data' ])
+  grunt.registerTask('compile-data', [ 'copy:pre-compile-data', 'compile-espeak-data', 'clean:post-compile-data' ])
