@@ -28,10 +28,9 @@
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
-    "grunt-coffeelint": "0.0.16",
     "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-coffee": "^1.0.0",
     "grunt-contrib-copy": "^1.0.0",
+    "grunt-eslint": "^19.0.0",
     "load-grunt-tasks": "^3.5.0",
     "lodash": "^4.14.1",
     "nan": "^2.3.5"
