@@ -9,6 +9,15 @@ module.exports = (grunt) => {
 
     pkg: grunt.file.readJSON('package.json'),
 
+    babel: {
+      dist: {
+        expand: true,
+        flatten : true,
+        src: 'src/*.js',
+        dest: 'dist'
+      }
+    },
+    
     clean: {
       dist: 'dist',
       'post-build-addon': [
@@ -31,17 +40,24 @@ module.exports = (grunt) => {
       },
 
       'post-build-espeak': {
-        files: [
-          { expand: true, flatten: true, src: 'src/add-on/include/espeak-ng/src/windows/X64/Release/libespeak-ng.lib', dest: 'build/'},
-          { expand: true, flatten: true, src: 'src/add-on/include/espeak-ng/src/windows/X64/Release/libespeak-ng.dll', dest: 'dist/win32/' }
-        ]
+        files: [{
+          expand: true, 
+          flatten: true, 
+          src: 'src/add-on/include/espeak-ng/src/windows/X64/Release/libespeak-ng.lib',
+          dest: 'build'
+        }, { 
+          expand: true, 
+          flatten: true, 
+          src: 'src/add-on/include/espeak-ng/src/windows/X64/Release/libespeak-ng.dll', 
+          dest: 'dist/lib/win32/' 
+        }]
       },
 
       'post-build-addon': {
         expand: true,
         flatten: true,
         src: 'build/Release/espeak_addon.node',
-        dest: 'dist/win32/',
+        dest: 'dist/lib/win32/',
       },
 
       'pre-compile-data': {
@@ -60,7 +76,7 @@ module.exports = (grunt) => {
     }
   })
 
-  grunt.registerTask('default', [ 'lint', 'build-addon', 'compile-data' ])
+  grunt.registerTask('default', [ 'lint', 'babel', 'build-addon', 'compile-data' ])
 
   grunt.registerTask('lint', [ 'eslint' ])
 

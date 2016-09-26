@@ -26,7 +26,10 @@
   },
   "homepage": "https://github.com/alan-ghelardi/speech-synth#readme",
   "devDependencies": {
+    "babel-preset-node6": "^11.0.0",
+    "babel-register": "^6.14.0",
     "grunt": "^1.0.1",
+    "grunt-babel": "^6.0.0",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-copy": "^1.0.0",
