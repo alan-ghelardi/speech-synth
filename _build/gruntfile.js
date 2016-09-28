@@ -76,7 +76,7 @@ module.exports = (grunt) => {
     }
   })
 
-  grunt.registerTask('default', [ 'lint', 'babel', 'build-addon', 'compile-data' ])
+  grunt.registerTask('default', [ 'lint', 'build-addon', 'babel', 'compile-data' ])
 
   grunt.registerTask('lint', [ 'eslint' ])
 
