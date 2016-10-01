@@ -3,7 +3,7 @@
 #include <nan.h>
 #include "espeak.h"
 
-class EspeakWrapper 
+class EspeakWrapper
 	: public Nan::ObjectWrap
 {
 
@@ -15,9 +15,13 @@ private:
 	~EspeakWrapper();
 
 	static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
+	static void Voice(const Nan::FunctionCallbackInfo<v8::Value>& info);
+	static void TryGetOrSetVoice(const Nan::FunctionCallbackInfo<v8::Value>& info);
+	static void GetAllVoices(const Nan::FunctionCallbackInfo<v8::Value>& info);
 	static void CompileData(const Nan::FunctionCallbackInfo<v8::Value>& info);
 	static void Speak(const Nan::FunctionCallbackInfo<v8::Value>& info);
 	static void Stop(const Nan::FunctionCallbackInfo<v8::Value>& info);
+	static Espeak* GetEspeak(const Nan::FunctionCallbackInfo<v8::Value>& info);
 
 public:
 	static void Init(v8::Local<v8::Object> exports);
