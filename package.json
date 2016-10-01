@@ -3,10 +3,6 @@
   "version": "0.0.1",
   "description": "Speech synthesizer for for NodeJS based on a native binding of espeak-ng ",
   "main": "bin/index.js",
-  "scripts": {
-    "test": "npm test",
-    "install": "node-gyp rebuild"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alan-ghelardi/speech-synth.git"
@@ -20,7 +16,6 @@
   ],
   "author": "Alan Ghelardi <alan.ghelardi@gmail.com>",
   "license": "GPL-3.0",
-  "gypfile": true,
   "bugs": {
     "url": "https://github.com/alan-ghelardi/speech-synth/issues"
   },
