@@ -112,9 +112,7 @@ const string Espeak::GetVoice()
 
 void Espeak::SetVoice(const string voiceName)
 {
-	espeak_VOICE* voice = espeak_GetCurrentVoice();
-	voice->name = voiceName.c_str();
-	espeak_ng_STATUS result = espeak_ng_SetVoiceByProperties(voice);
+	espeak_ng_STATUS result = espeak_ng_SetVoiceByName(voiceName.c_str());
 
 	stringstream buffer;
 	buffer << "Failed to switch to voice '" << voiceName << "'";
