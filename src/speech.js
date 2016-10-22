@@ -1,21 +1,33 @@
 import espeak from './single-espeak'
+import Voice from './voice'
 
-const speech = Object.create(null)
+const speech = { 
 
-speech.speak = (text) => {
-  return new Promise((resolve, reject) => {
-    espeak.speak(text, error => {
-      if (error) {
-        reject(error)
-      } else {
-        resolve()
-      }
+  get voice() {
+    const rawName = espeak.voice()
+    return Voice.valueOf(rawName)
+  },
+
+  set voice(aVoice) {
+    espeak.voice(aVoice.rawName)
+  },
+
+  speak(text){
+    return new Promise((resolve, reject) => {
+      espeak.speak(text, error => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve()
+        }
+      })
     })
-  })
-}
+  },
 
-speech.stop = () => {
-  espeak.stop()  
+  stop() {
+    espeak.stop()   
+  }
+
 }
 
 export default speech
