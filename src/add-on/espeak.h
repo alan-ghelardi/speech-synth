@@ -26,16 +26,10 @@ private:
 public:
 	Espeak(const string dataPath, const bool isCompiling = false);
 
-	unsigned int GetPitch();
-	void SetPitch(unsigned int pitch);
-	unsigned int GetSpeed();
-	void SetSpeed(unsigned int speed);
-	unsigned int GetVolume();
-	void SetVolume(unsigned int volume);
+	int GetParameter(int parameterIdentifier) const;
+	void SetParameter(int parameterIdentifier, int value);
 	const string GetVoice();
 	void SetVoice(const string voiceName);
-	const string GetLanguage();
-	void SetLanguage(const string language);
 	const vector<string> GetAvailableVoices();
 	void CompileData(const string dictionariesPath);
 	void Speak(const string text);

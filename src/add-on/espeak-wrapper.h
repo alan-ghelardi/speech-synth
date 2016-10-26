@@ -15,8 +15,10 @@ private:
 	~EspeakWrapper();
 
 	static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
-	static void Voice(const Nan::FunctionCallbackInfo<v8::Value>& info);
-	static void TryGetOrSetVoice(const Nan::FunctionCallbackInfo<v8::Value>& info);
+	static void GetParameter(const Nan::FunctionCallbackInfo<v8::Value>& info);
+	static void SetParameter(const Nan::FunctionCallbackInfo<v8::Value>& info);
+	static void GetVoice(const Nan::FunctionCallbackInfo<v8::Value>& info);
+	static void SetVoice(const Nan::FunctionCallbackInfo<v8::Value>& info);
 	static void GetAllVoices(const Nan::FunctionCallbackInfo<v8::Value>& info);
 	static void CompileData(const Nan::FunctionCallbackInfo<v8::Value>& info);
 	static void Speak(const Nan::FunctionCallbackInfo<v8::Value>& info);

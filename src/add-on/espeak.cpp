@@ -71,36 +71,14 @@ int Espeak::SynthesizerCallback(short* chunks, int numberOfSamples, espeak_EVENT
 	return result;
 }
 
-unsigned int Espeak::GetPitch()
+int Espeak::GetParameter(int parameterIdentifier) const
 {
-	return espeak_GetParameter(espeakPITCH, 1);
+	return espeak_GetParameter((espeak_PARAMETER)parameterIdentifier, 1);
 }
 
-void Espeak::SetPitch(unsigned int pitch)
+void Espeak::SetParameter(int parameterIdentifier, int value)
 {
-	espeak_ng_STATUS result = espeak_ng_SetParameter(espeakPITCH, pitch, 0);
-	RaiseExceptionUnlessSucceeded(result);
-}
-
-unsigned int Espeak::GetSpeed()
-{
-	return espeak_GetParameter(espeakRATE, 1);
-}
-
-void Espeak::SetSpeed(unsigned int speed)
-{
-	espeak_ng_STATUS result = espeak_ng_SetParameter(espeakRATE, speed, 0);
-	RaiseExceptionUnlessSucceeded(result);
-}
-
-unsigned int Espeak::GetVolume()
-{
-	return espeak_GetParameter(espeakVOLUME, 1);
-}
-
-void Espeak::SetVolume(unsigned int volume)
-{
-	espeak_ng_STATUS result = espeak_ng_SetParameter(espeakVOLUME, volume, 0);
+	espeak_ng_STATUS result = espeak_ng_SetParameter((espeak_PARAMETER)parameterIdentifier, value, 0);
 	RaiseExceptionUnlessSucceeded(result);
 }
 
@@ -117,20 +95,6 @@ void Espeak::SetVoice(const string voiceName)
 	stringstream buffer;
 	buffer << "Failed to switch to voice '" << voiceName << "'";
 	RaiseExceptionUnlessSucceeded(result, buffer.str());
-}
-
-const string Espeak::GetLanguage()
-{
-	espeak_VOICE* voice = espeak_GetCurrentVoice();
-	return voice->languages;
-}
-
-void Espeak::SetLanguage(const string language)
-{
-	espeak_VOICE* voice = espeak_GetCurrentVoice();
-	voice->languages = language.c_str();
-	espeak_ng_STATUS result = espeak_ng_SetVoiceByProperties(voice);
-	RaiseExceptionUnlessSucceeded(result);
 }
 
 const vector<string> Espeak::GetAvailableVoices()

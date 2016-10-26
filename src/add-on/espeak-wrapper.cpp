@@ -19,6 +19,12 @@ const bool ToBoolean(const v8::Local<v8::Value> value)
 	return maybeValue.FromMaybe(false);
 }
 
+const int ToInt32(const v8::Local<v8::Value> value)
+{
+	Nan::Maybe<int> maybeValue = Nan::To<int>(value);
+	return maybeValue.FromJust();
+}
+
 Nan::Persistent<v8::Function> EspeakWrapper::constructor;
 
 EspeakWrapper::EspeakWrapper(const char* dataPath, const bool isCompiling)
@@ -45,7 +51,10 @@ void EspeakWrapper::Init(v8::Local<v8::Object> exports)
 	tpl->SetClassName(Nan::New("Espeak").ToLocalChecked());
 	tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
-	Nan::SetPrototypeMethod(tpl, "voice", Voice);
+	Nan::SetPrototypeMethod(tpl, "getParameter", GetParameter);
+	Nan::SetPrototypeMethod(tpl, "setParameter", SetParameter);
+	Nan::SetPrototypeMethod(tpl, "getVoice", GetVoice);
+	Nan::SetPrototypeMethod(tpl, "setVoice", SetVoice);
 	Nan::SetPrototypeMethod(tpl, "getAllVoices", GetAllVoices);
 	Nan::SetPrototypeMethod(tpl, "compileData", CompileData);
 	Nan::SetPrototypeMethod(tpl, "speak", Speak);
@@ -71,11 +80,14 @@ void EspeakWrapper::New(const Nan::FunctionCallbackInfo<v8::Value>& info)
 	}
 }
 
-void EspeakWrapper::Voice(const Nan::FunctionCallbackInfo<v8::Value>& info)
+void EspeakWrapper::GetParameter(const Nan::FunctionCallbackInfo<v8::Value>& info)
 {
 	try
 	{
-		EspeakWrapper::TryGetOrSetVoice(info);
+		Espeak* espeak = EspeakWrapper::GetEspeak(info);
+		int parameterIdentifier = ToInt32(info[0]);
+		int value = espeak->GetParameter(parameterIdentifier);
+		info.GetReturnValue().Set(Nan::New(value));
 	}
 	catch (const std::exception& error)
 	{
@@ -83,20 +95,32 @@ void EspeakWrapper::Voice(const Nan::FunctionCallbackInfo<v8::Value>& info)
 	}
 }
 
-void EspeakWrapper::TryGetOrSetVoice(const Nan::FunctionCallbackInfo<v8::Value>& info)
+void EspeakWrapper::SetParameter(const Nan::FunctionCallbackInfo<v8::Value>& info)
 {
-	Espeak* espeak = EspeakWrapper::GetEspeak(info);
-
-	if (info.Length())
+	try
 	{
-		const char* voice = ToString(info[0].As<v8::String>());
-		espeak->SetVoice(voice);
-		info.GetReturnValue().SetUndefined();
+		Espeak* espeak = EspeakWrapper::GetEspeak(info);
+		int parameterIdentifier = ToInt32(info[0]);
+		int value = ToInt32(info[1]);
+		espeak->SetParameter(parameterIdentifier, value);
 	}
-	else
+	catch (const std::exception& error)
 	{
+		Nan::ThrowError(error.what());
+	}
+}
+
+void EspeakWrapper::GetVoice(const Nan::FunctionCallbackInfo<v8::Value>& info)
+{
+	try
+	{
+		Espeak* espeak = EspeakWrapper::GetEspeak(info);
 		string voice = espeak->GetVoice();
 		info.GetReturnValue().Set(Nan::New(voice).ToLocalChecked());
+	}
+	catch (const std::exception& error)
+	{
+		Nan::ThrowError(error.what());
 	}
 }
 
@@ -104,6 +128,20 @@ Espeak* EspeakWrapper::GetEspeak(const Nan::FunctionCallbackInfo<v8::Value>& inf
 {
 	EspeakWrapper* wrapper = ObjectWrap::Unwrap<EspeakWrapper>(info.Holder());
 	return wrapper->espeak;
+}
+
+void EspeakWrapper::SetVoice(const Nan::FunctionCallbackInfo<v8::Value>& info)
+{
+	try
+	{
+		Espeak* espeak = EspeakWrapper::GetEspeak(info);
+		const char* voice = ToString(info[0].As<v8::String>());
+		espeak->SetVoice(voice);
+	}
+	catch (const std::exception& error)
+	{
+		Nan::ThrowError(error.what());
+	}
 }
 
 void EspeakWrapper::GetAllVoices(const Nan::FunctionCallbackInfo<v8::Value>& info)
