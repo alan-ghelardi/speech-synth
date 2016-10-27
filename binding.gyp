@@ -3,19 +3,19 @@
     {
       "target_name": "espeak_addon",
       "sources": [
-          "src/add-on/compilation-worker.cpp",
-        "src/add-on/direct-sound-player.cpp",
-                "src/add-on/espeak.cpp",
-        "src/add-on/espeak-addon.cpp",
-        "src/add-on/espeak-wrapper.cpp",
-        "src/add-on/helpers.cpp",
-        "src/add-on/speech-worker.cpp",
-        "src/add-on/wave-data.cpp",
-        "src/add-on/wave-player.cpp"
+          "src/cpp/compilation-worker.cpp",
+        "src/cpp/direct-sound-player.cpp",
+                "src/cpp/espeak.cpp",
+        "src/cpp/espeak-addon.cpp",
+        "src/cpp/espeak-wrapper.cpp",
+        "src/cpp/helpers.cpp",
+        "src/cpp/speech-worker.cpp",
+        "src/cpp/wave-data.cpp",
+        "src/cpp/wave-player.cpp"
       ],
       "include_dirs" : [
         "<!(node -e \"require('nan')\")",
-        "src/add-on/include/espeak-ng/src/include"
+        "src/cpp/include/espeak-ng/src/include"
       ],
       "libraries" : [
       "libespeak-ng.lib"

@@ -13,7 +13,7 @@ module.exports = (grunt) => {
       dist: {
         expand: true,
         flatten : true,
-        src: 'src/*.js',
+        src: 'src/js/**/*.js',
         dest: 'dist'
       }
     },
@@ -22,8 +22,8 @@ module.exports = (grunt) => {
       dist: 'dist',
       'post-build-addon': [
         'build/',
-        'src/add-on/include/espeak-ng/src/pcaudiolib/',
-        'src/add-on/include/espeak-ng/src/windows/X64/'
+        'src/cpp/include/espeak-ng/src/pcaudiolib/',
+        'src/cpp/include/espeak-ng/src/windows/X64/'
       ],
       'post-compile-data': [
         'dist/dictsource',
@@ -33,22 +33,22 @@ module.exports = (grunt) => {
 
     copy: {
       'pre-build-espeak': {
-        cwd: 'src/add-on/include',
+        cwd: 'src/cpp/include',
         expand: true,
         src: 'pcaudiolib/**',
-        dest: 'src/add-on/include/espeak-ng/src/'
+        dest: 'src/cpp/include/espeak-ng/src/'
       },
 
       'post-build-espeak': {
         files: [{
           expand: true, 
           flatten: true, 
-          src: 'src/add-on/include/espeak-ng/src/windows/X64/Release/libespeak-ng.lib',
+          src: 'src/cpp/include/espeak-ng/src/windows/X64/Release/libespeak-ng.lib',
           dest: 'build'
         }, { 
           expand: true, 
           flatten: true, 
-          src: 'src/add-on/include/espeak-ng/src/windows/X64/Release/libespeak-ng.dll', 
+          src: 'src/cpp/include/espeak-ng/src/windows/X64/Release/libespeak-ng.dll', 
           dest: 'dist/lib/win32/' 
         }]
       },
@@ -61,7 +61,7 @@ module.exports = (grunt) => {
       },
 
       'pre-compile-data': {
-        cwd: 'src/add-on/include/espeak-ng',
+        cwd: 'src/cpp/include/espeak-ng',
         expand: true,
         src: [ 'dictsource/**', 'espeak-data/**', 'phsource/**' ],
         dest: 'dist/'
@@ -72,7 +72,7 @@ module.exports = (grunt) => {
       options: {
         config : '.eslintrc.json'
       },
-      target : [ '_build/**/*.js', 'src/*.js' ]
+      target : [ '_build/**/*.js', 'src/js/**/*.js' ]
     }
   })
 

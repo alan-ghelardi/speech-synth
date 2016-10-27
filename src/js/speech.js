@@ -4,12 +4,12 @@ import Voice from './voice'
 const speech = { 
 
   get voice() {
-    const rawName = espeak.voice()
+    const rawName = espeak.getVoice()
     return Voice.valueOf(rawName)
   },
 
   set voice(aVoice) {
-    espeak.voice(aVoice.rawName)
+    espeak.setVoice(aVoice.rawName)
   },
 
   speak(text){
